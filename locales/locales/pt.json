@@ -1,4 +1,5 @@
 {
+  "use_website_to_upload": "Faça login em nosso site para enviar um novo nível.\nNão oferecemos suporte para envio de níveis dentro do jogo.\n\n{url}",
   "server_description": "https://discord.gg/UntitledCharts\n\nO servidor customizado oficial de UntitledCharts!",
   "item_not_found": "{item} item \"{name}\" não encontrado.",
   "item_type_not_found": "Item \"{item}\" não encontrado.",
