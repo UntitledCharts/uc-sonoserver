@@ -10,7 +10,7 @@
     "background_name": "PLEASE-SELECT",
     "effect_name": "coconut-next-sekai-1",
     "particle_name": "toasted-bread-st",
-    "description": "\nNext SEKAI's expansion engine, with a visual extension!\n\nhttps://github.com/hyeon2006/sonolus-next-rush-plus-engine\nv1.8.10",
+    "description": "\nNext SEKAI's expansion engine, with a visual extension!\n\nhttps://github.com/hyeon2006/sonolus-next-rush-plus-engine\nv1.8.16",
     "engine_sort_order": 1,
     "can_be_ranked": true,
     "unrankable_options": [],
