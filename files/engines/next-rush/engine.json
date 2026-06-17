@@ -10,7 +10,7 @@
     "background_name": "PLEASE-SELECT",
     "effect_name": "8bit",
     "particle_name": "pixel",
-    "description": "\nPerspective-lane rhythm game for Sonolus\n\nhttps://github.com/UntitledCharts/sonolus-next-rush-engine\nv1.5.4",
+    "description": "\nPerspective-lane rhythm game for Sonolus\n\nhttps://github.com/UntitledCharts/sonolus-next-rush-engine\nv2.0.0",
     "engine_sort_order": 1,
     "can_be_ranked": true,
     "unrankable_options": [],
