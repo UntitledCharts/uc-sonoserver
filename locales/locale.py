@@ -742,6 +742,41 @@ class Loc:
         return self._get("staff_pick_remove")
 
     @property
+    def ban(self) -> str:
+        """
+        Ban User
+        """
+        return self._get("ban")
+
+    @property
+    def unban(self) -> str:
+        """
+        Unban User
+        """
+        return self._get("unban")
+
+    @property
+    def ban_confirm(self) -> str:
+        """
+        Please confirm this user is breaking the rules. They will lose access to the server.
+        """
+        return self._get("ban_confirm")
+
+    @property
+    def ban_delete(self) -> str:
+        """
+        Delete their charts
+        """
+        return self._get("ban_delete")
+
+    @property
+    def ban_delete_desc(self) -> str:
+        """
+        Also delete every chart they uploaded, along with all of their files. This cannot be undone.
+        """
+        return self._get("ban_delete_desc")
+
+    @property
     def random_staff_pick(self) -> str:
         """
         Random Staff Pick

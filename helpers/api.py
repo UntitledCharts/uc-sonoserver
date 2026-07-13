@@ -83,6 +83,9 @@ class API:
         self._client_session = ClientSession(base_url=base_url)
         self._use_app_auth = (app_auth_header, app_auth)
 
+    async def close(self) -> None:
+        await self._client_session.close()
+
     def delete_comment(
         self, item_name: str, comment_id: int
     ) -> Request[DeleteCommentResponse]:
@@ -188,7 +191,7 @@ class API:
             json={"status": visibility},
         )
 
-    async def _get_chart_not_ok_callback(self, response: ClientResponse):
+    async def _forward_error_callback(self, response: ClientResponse):
         data = await response.json()
         detail = data.get("detail") or data.get("message") or "Unknown error"
         raise HTTPException(
@@ -202,7 +205,26 @@ class API:
             "GET",
             f"/api/charts/{item_name.removeprefix('UnCh-')}/",
             GetChartResponse,
-            not_ok_callback=self._get_chart_not_ok_callback,
+            not_ok_callback=self._forward_error_callback,
+        )
+
+    def ban_user(self, user_id: str, delete: bool) -> Request[None]:
+        return Request(
+            self._client_session,
+            "PATCH",
+            f"/api/accounts/{user_id}/moderation/ban/",
+            None,
+            params={"delete": int(delete)},
+            not_ok_callback=self._forward_error_callback,
+        )
+
+    def unban_user(self, user_id: str) -> Request[None]:
+        return Request(
+            self._client_session,
+            "PATCH",
+            f"/api/accounts/{user_id}/moderation/unban/",
+            None,
+            not_ok_callback=self._forward_error_callback,
         )
 
     def get_random_charts(

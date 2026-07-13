@@ -48,6 +48,19 @@ class ServerSubmitLevelActionRequest(ServerSubmitItemActionRequest):
         )
 
 
+class _ParsedServerSubmitUserActionRequest(BaseModel):
+    type: str
+    # unchecked toggles aren't submitted, so this must default to off
+    delete: bool = False
+
+
+class ServerSubmitUserActionRequest(ServerSubmitItemActionRequest):
+    def parse(self) -> _ParsedServerSubmitUserActionRequest:
+        return _ParsedServerSubmitUserActionRequest.model_validate(
+            {k: v[0] for k, v in parse_qs(self.values).items()}
+        )
+
+
 class _ParsedServerSubmitPlaylistActionRequest(BaseModel):
     sort_by: Literal[
         "created_at",

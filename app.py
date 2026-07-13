@@ -1,5 +1,6 @@
 import json
 import os, importlib, traceback
+from contextlib import asynccontextmanager
 from urllib.parse import urlparse
 
 from fastapi import Request, status, Response
@@ -18,7 +19,26 @@ debug = config["server"]["debug"]
 
 VERSION_REGEX = r"^\d+\.\d+\.\d+$"
 
-app = SonolusFastAPI(debug=debug, base_url=config["server"]["base-url"])
+
+@asynccontextmanager
+async def lifespan(app: SonolusFastAPI):
+    folder = "sonolus"
+    if len(os.listdir(folder)) == 0:
+        print("[WARN] No routes loaded.")
+    else:
+        load_routes(folder, cleanup=debug)
+        print("Routes loaded!")
+
+    app.api = API(app.api_config["url"], app.auth_header, app.auth)
+
+    yield
+
+    await app.api.close()
+
+
+app = SonolusFastAPI(
+    debug=debug, base_url=config["server"]["base-url"], lifespan=lifespan
+)
 
 
 @app.middleware("http")
@@ -150,27 +170,12 @@ def load_routes(folder, cleanup: bool = True):
                 print(f"[API] Removed __pycache__ at {pycache_path}")
 
 
-async def startup_event():
-    folder = "sonolus"
-    if len(os.listdir(folder)) == 0:
-        print("[WARN] No routes loaded.")
-    else:
-        load_routes(folder, cleanup=debug)
-        print("Routes loaded!")
-
-    app.api = API(app.api_config["url"], app.auth_header, app.auth)
-
-
-app.add_event_handler("startup", startup_event)
-# uvicorn.run("app:app", port=port, host="0.0.0.0")
-
-
 def start_fastapi(args):
     uvicorn.run(
         "app:app",
         host="0.0.0.0",
         port=config["server"]["port"],
-        workers=4,
+        workers=1,
         access_log=debug,
     )
 
