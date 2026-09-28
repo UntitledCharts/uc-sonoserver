@@ -7,6 +7,7 @@ from typing import Literal
 
 from core import SonolusRequest
 from helpers.models.sonolus.response import ServerItemList
+from helpers.models.sonolus.misc import Tag
 
 router = APIRouter()
 
@@ -132,5 +133,35 @@ async def main(
             detail=locale.items_not_found("level"),
         )
     page_data = handle_item_uwu(data, request.state.localization, uwu_level)
+
+    # first page only: an optional promoted level, prepended as the first item and
+    # tagged PROMOTED (same chance/targeting as the homepage promoted section)
+    if page == 0:
+        promo_response = await request.app.api.serve_promotion().send(auth)
+        if (
+            promo_response.data
+            and promo_response.data.promotion
+            and promo_response.data.data
+        ):
+            promo = promo_response.data
+            promo_asset_base = (
+                promo.asset_base_url.removesuffix("/")
+                if promo.asset_base_url
+                else asset_base_url
+            )
+            promo_item = await request.app.run_blocking(
+                promo.data.to_level_item,
+                request,
+                promo_asset_base,
+                request.state.levelbg,
+            )
+            promo_item = handle_item_uwu(
+                [promo_item], request.state.localization, uwu_level
+            )[0]
+            promo_item.name = (
+                f"UnCh-{promo.promotion.chart_id}-{promo.promotion.view_code}"
+            )
+            promo_item.tags.insert(0, Tag(title=locale.promoted))
+            page_data = [promo_item] + page_data
 
     return ServerItemList(pageCount=num_pages, items=page_data)
