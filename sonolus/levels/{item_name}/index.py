@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter
 
 from core import SonolusRequest
@@ -23,7 +25,27 @@ async def main(request: SonolusRequest, item_name: str):
     auth = request.headers.get("Sonolus-Session")
     actions = []
 
-    response = await request.app.api.get_chart(item_name).send(auth)
+    # a promoted level opens as UnCh-{id}-{view_code}; register the click and open
+    # the real chart, whose response carries the plain UnCh-{id} name back to the client
+    clean_item_name = item_name
+    promo_chart_id = None
+    promo_view_code = None
+    if item_name.startswith("UnCh-"):
+        rest = item_name[len("UnCh-") :]
+        if "-" in rest:
+            chart_id_part, code_part = rest.split("-", 1)
+            if len(chart_id_part) == 32 and chart_id_part.isalnum() and code_part:
+                clean_item_name = f"UnCh-{chart_id_part}"
+                promo_chart_id = chart_id_part
+                promo_view_code = code_part
+
+    if promo_chart_id and promo_view_code:
+        response, _ = await asyncio.gather(
+            request.app.api.get_chart(clean_item_name).send(auth),
+            request.app.api.click_promotion(promo_chart_id, promo_view_code).send(auth),
+        )
+    else:
+        response = await request.app.api.get_chart(clean_item_name).send(auth)
 
     asset_base_url = response.data.asset_base_url.removesuffix("/")
     liked = response.data.data.liked
@@ -59,7 +81,19 @@ async def main(request: SonolusRequest, item_name: str):
                 ),
             )
     if response.data.mod or response.data.owner:
-        if response.data.owner or response.data.admin:
+        if response.data.data.deleted_at is not None:
+            # only mods/admins can reach a chart pending deletion, and only they restore it
+            if response.data.mod:
+                actions.append(
+                    ServerForm(
+                        type="undelete",
+                        title=locale.undelete,
+                        icon="restore",
+                        requireConfirmation=True,
+                        options=[],
+                    )
+                )
+        elif response.data.owner or response.data.mod:
             actions.append(
                 ServerForm(
                     type="delete",
@@ -79,9 +113,18 @@ async def main(request: SonolusRequest, item_name: str):
             },
         }
         current = response.data.data.status
-        visibility_values = []
-        for s, meta in VISIBILITIES.items():
-            visibility_values.append(ServerOption_Value(name=s, title=meta["title"]))
+
+        if response.data.owner:
+            select_statuses = ["PRIVATE", "UNLISTED"]
+            select_default = current if current in select_statuses else "PRIVATE"
+        else:
+            select_statuses = ["PUBLIC", "PRIVATE", "UNLISTED"]
+            select_default = current
+
+        visibility_values = [
+            ServerOption_Value(name=s, title=VISIBILITIES[s]["title"])
+            for s in select_statuses
+        ]
 
         actions.append(
             ServerForm(
@@ -94,12 +137,53 @@ async def main(request: SonolusRequest, item_name: str):
                         query="visibility",
                         name=locale.search.VISIBILITY,
                         required=True,
-                        default=current,
+                        default=select_default,
                         values=visibility_values,
                     )
                 ],
             )
         )
+
+        if response.data.owner and current != "PUBLIC":
+            actions.append(
+                ServerForm(
+                    type="make_public",
+                    title=locale.make_public,
+                    icon="globe",
+                    requireConfirmation=True,
+                    description=locale.make_public_confirm_desc,
+                    options=[
+                        ServerToggleOption(
+                            query="confirm_finished",
+                            name=locale.make_public_confirm_finished,
+                            description=locale.make_public_confirm_desc,
+                            required=True,
+                            default=False,
+                        ),
+                        ServerToggleOption(
+                            query="confirm_jacket",
+                            name=locale.make_public_confirm_jacket,
+                            description=locale.make_public_confirm_desc,
+                            required=True,
+                            default=False,
+                        ),
+                        ServerToggleOption(
+                            query="confirm_title",
+                            name=locale.make_public_confirm_title,
+                            description=locale.make_public_confirm_desc,
+                            required=True,
+                            default=False,
+                        ),
+                        ServerToggleOption(
+                            query="confirm_bpm",
+                            name=locale.make_public_confirm_bpm,
+                            description=locale.make_public_confirm_bpm_desc,
+                            required=True,
+                            default=False,
+                        ),
+                    ],
+                )
+            )
         if response.data.mod:
             actions.append(
                 ServerForm(

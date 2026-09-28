@@ -38,7 +38,7 @@ async def main(request: SonolusRequest):
     ]
     staff_pick = request.state.staff_pick
 
-    random_response, newest_response, staffpick_req, popular_response = (
+    random_response, newest_response, staffpick_req, popular_response, promo_response = (
         await asyncio.gather(
             request.app.api.get_random_charts(staff_pick).send(auth),
             request.app.api.get_newest_charts(staff_pick).send(auth),
@@ -46,6 +46,7 @@ async def main(request: SonolusRequest):
                 auth
             ),
             request.app.api.get_popular_charts(staff_pick).send(auth),
+            request.app.api.serve_promotion().send(auth),
         )
     )
 
@@ -95,6 +96,35 @@ async def main(request: SonolusRequest):
         ]
     )
 
+    promoted_section = None
+    if (
+        promo_response.data
+        and promo_response.data.promotion
+        and promo_response.data.data
+    ):
+        promo = promo_response.data
+        promo_asset_base = (
+            promo.asset_base_url.removesuffix("/")
+            if promo.asset_base_url
+            else asset_base_url
+        )
+        promo_item = await request.app.run_blocking(
+            promo.data.to_level_item,
+            request,
+            promo_asset_base,
+            request.state.levelbg,
+        )
+        promo_item = handle_item_uwu(
+            [promo_item], request.state.localization, uwu_level
+        )[0]
+        # click tracking: the level page reverts this to UnCh-{id} on open
+        promo_item.name = f"UnCh-{promo.promotion.chart_id}-{promo.promotion.view_code}"
+        promoted_section = LevelItemSection(
+            title=locale.promoted,
+            icon="trophy",
+            items=[promo_item],
+        )
+
     sections = [
         LevelItemSection(
             title=(
@@ -134,6 +164,9 @@ async def main(request: SonolusRequest):
             items=handle_item_uwu(popular, request.state.localization, uwu_level),
         ),
     ]
+
+    if promoted_section:
+        sections.insert(0, promoted_section)
 
     options = [
         ServerTextOption(

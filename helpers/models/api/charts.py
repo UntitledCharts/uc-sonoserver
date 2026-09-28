@@ -44,6 +44,7 @@ class Chart(BaseModel):
     chart_design: str
     is_first_publish: bool | None = None  # only returned on update_status
     liked: bool | None = None
+    deleted_at: datetime | None = None
 
     @staticmethod
     @lru_cache(maxsize=None)
@@ -326,6 +327,17 @@ class GetChartResponse(BaseModel):
 class DeleteChartResponse(Chart):
     admin: bool | None = None
     owner: bool | None = None
+
+
+class PromotionData(BaseModel):
+    chart_id: str
+    view_code: str
+
+
+class PromotionServeResponse(BaseModel):
+    promotion: PromotionData | None = None
+    data: Chart | None = None
+    asset_base_url: str | None = None
 
 
 class VisibilityChangeResponse(Chart):

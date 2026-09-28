@@ -742,6 +742,78 @@ class Loc:
         return self._get("staff_pick_remove")
 
     @property
+    def undelete(self) -> str:
+        """
+        Undelete
+        """
+        return self._get("undelete")
+
+    @property
+    def promoted(self) -> str:
+        """
+        Promoted
+        """
+        return self._get("promoted")
+
+    @property
+    def make_public(self) -> str:
+        """
+        Make Public
+        """
+        return self._get("make_public")
+
+    @property
+    def make_public_confirm_finished(self) -> str:
+        """
+        I confirm that this chart is finished
+        """
+        return self._get("make_public_confirm_finished")
+
+    @property
+    def make_public_confirm_jacket(self) -> str:
+        """
+        I confirm the jacket I upload is the official jacket for the song
+        """
+        return self._get("make_public_confirm_jacket")
+
+    @property
+    def make_public_confirm_title(self) -> str:
+        """
+        I confirm the song title I'm using is the official title for the song
+        """
+        return self._get("make_public_confirm_title")
+
+    @property
+    def make_public_confirm_bpm(self) -> str:
+        """
+        I confirm that I am using proper BPMs for my chart
+        """
+        return self._get("make_public_confirm_bpm")
+
+    @property
+    def make_public_confirm_desc(self) -> str:
+        """
+        We will delete public charts that do not follow this criteria.
+        """
+        return self._get("make_public_confirm_desc")
+
+    @property
+    def make_public_confirm_bpm_desc(self) -> str:
+        """
+        We will delete public charts that do not follow this criteria.
+
+        You may find help in our Discord server about BPMs if you're not sure.
+        """
+        return self._get("make_public_confirm_bpm_desc")
+
+    @property
+    def make_public_confirm_required(self) -> str:
+        """
+        Please confirm all requirements before making this chart public. We will delete public charts that do not follow this criteria.
+        """
+        return self._get("make_public_confirm_required")
+
+    @property
     def ban(self) -> str:
         """
         Ban User

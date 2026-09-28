@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi import HTTPException, status
 
 from core import SonolusRequest
-from . import _like, _delete, _rerate, _staff_pick, _visibility
+from . import _like, _delete, _undelete, _rerate, _staff_pick, _visibility
 
 from helpers.models.sonolus.submit import ServerSubmitLevelActionRequest
 from helpers.models.sonolus.response import ServerSubmitItemActionResponse
@@ -34,9 +34,35 @@ async def main(
             )
         case "delete":
             return await _delete.delete(auth, request, item_name, locale)
+        case "undelete":
+            return await _undelete.undelete(auth, request, item_name, locale)
         case "visibility":
             return await _visibility.visibility(
-                auth, request, item_name, flattened_data.visibility, locale
+                auth,
+                request,
+                item_name,
+                flattened_data.visibility,
+                locale,
+                confirmations=(
+                    flattened_data.confirm_finished,
+                    flattened_data.confirm_jacket,
+                    flattened_data.confirm_title,
+                    flattened_data.confirm_bpm,
+                ),
+            )
+        case "make_public":
+            return await _visibility.visibility(
+                auth,
+                request,
+                item_name,
+                "PUBLIC",
+                locale,
+                confirmations=(
+                    flattened_data.confirm_finished,
+                    flattened_data.confirm_jacket,
+                    flattened_data.confirm_title,
+                    flattened_data.confirm_bpm,
+                ),
             )
         case "rerate":
             return await _rerate.rerate(

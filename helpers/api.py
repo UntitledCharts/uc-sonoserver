@@ -144,6 +144,33 @@ class API:
             DeleteChartResponse,
         )
 
+    def undelete_chart(self, item_name: str) -> Request[DeleteChartResponse]:
+        return Request(
+            self._client_session,
+            "POST",
+            f"/api/charts/{item_name.removeprefix('UnCh-')}/undelete/",
+            DeleteChartResponse,
+        )
+
+    def serve_promotion(self) -> Request[PromotionServeResponse]:
+        return Request(
+            self._client_session,
+            "GET",
+            "/api/promotions/serve/",
+            PromotionServeResponse,
+        )
+
+    def click_promotion(
+        self, chart_id: str, view_code: str
+    ) -> Request[None]:
+        return Request(
+            self._client_session,
+            "POST",
+            "/api/promotions/click/",
+            None,
+            json={"chart_id": chart_id, "view_code": view_code},
+        )
+
     def like_chart(
         self, item_name: str, type: Literal["like", "unlike"]
     ) -> Request[None]:

@@ -39,6 +39,10 @@ class _ParsedServerSubmitLevelActionRequest(BaseModel):
     type: str
     visibility: Literal["UNLISTED", "PRIVATE", "PUBLIC", None] = None
     constant: str | None = None
+    confirm_finished: bool = False
+    confirm_jacket: bool = False
+    confirm_title: bool = False
+    confirm_bpm: bool = False
 
 
 class ServerSubmitLevelActionRequest(ServerSubmitItemActionRequest):
