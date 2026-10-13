@@ -1,5 +1,5 @@
 {
-  "use_website_to_upload": "Vui lòng truy cập website để tải chart lên. Hiện tại chúng tôi không hỗ trợ tải chart lên trong game.\n\n{url}",
+  "use_website_to_upload": "Bạn ơi, Server này chưa hỗ trợ đăng chart lên ngay trong game đâu. Bạn có thể truy cập qua liên kết website để đăng chart của mình lên.\n\n{url}",
   "server_description": "https://discord.gg/UntitledCharts\nServer chính thức của UntitledCharts!",
   "item_not_found": "Không tìm thấy mục {item} \"{name}\".",
   "item_type_not_found": "Không tìm thấy mục \"{item}\".",
@@ -7,7 +7,7 @@
   "items_not_found_search": "Không tìm thấy bất kỳ {item} nào khớp với tìm kiếm của bạn.",
   "invalid_page_plural": "Trang {page} không tồn tại! Có tổng {max_page} trang.",
   "invalid_page_singular": "Trang {page} không tồn tại! Có tổng {max_page} trang.",
-  "not_logged_in": "Chào mừng bạn đến với UntitledCharts!\nĐăng nhập để trải nghiệm tính năng mới!",
+  "not_logged_in": "Chào mừng bạn đến với UntitledCharts!\nThử đăng nhập để trải nghiệm tính năng mới đi!",
   "not_found": "Không tìm thấy.",
   "unknown_error": "Lỗi không xác định!",
   "welcome": "Chào mừng {username} đến với UntitledCharts!",
@@ -30,7 +30,7 @@
   "staff_pick_desc": "Những chart được đội ngũ đánh giá là thú vị nhất, có thể chơi được đối với những người chơi có trình độ phù hợp!",
   "non_staff_pick_desc": "Những chart chưa được đội ngũ đánh giá là những chart thú vị, có đôi phần khó hơn hoặc chưa được hoàn thiện, bạn có thể trải nghiệm nếu muốn.",
   "staff_pick_notice": "Đừng cầu xin đội ngũ chúng tôi thêm chart của bạn vào danh sách đánh giá. Cùng lắm thì bạn có thể hỏi chúng tôi đánh giá chart của bạn",
-  "staff_pick_confirm": "Xác nhận chart này vui, hãy chấm điểm là (±1) hoặc có thể ghi là \"chơi ổn\".",
+  "staff_pick_confirm": "Hãy xác nhận chart này chơi khá vui, bạn có thể chấm điểm dựa trên than số là (±1) hoặc có thể ghi là \"chơi ổn\".",
   "staff_pick_add": "Thêm vào danh sách đánh giá",
   "staff_pick_remove": "Gỡ khỏi danh sách đánh giá",
   "undelete": "Khôi phục",
@@ -66,10 +66,10 @@
   "notifications_plural": "Bạn có {num} thông báo mới!\nThông báo hệ thống có trong mục \"Bài đăng\".\nVui lòng đọc để tiếp tục vào server.",
   "notifications_singular": "Bạn có {num} thông báo mới!\nThông báo hệ thống có trong mục \"Bài đăng\".\nVui lòng đọc để tiếp tục vào server.",
   "uwu": "UwU >.< (Tính năng đặc biệt)",
-  "uwu_desc": "Thay đổi phong cách nội dung Server thành chủ đề UwUify (LƯU Ý: TÍNH NĂNG NÀY CHỈ HỖ TRỢ Ở NGÔN NGỮ EN/TR)",
-  "slightly": "Hơi hơi",
-  "a_lot": "Rất nhiều",
-  "extreme": "Cực độ",
+  "uwu_desc": "Thay đổi phong cách nội dung của Server thành chủ đề UwUify (LƯU Ý: TÍNH NĂNG NÀY CHỈ HỖ TRỢ Ở NGÔN NGỮ EN/TR)",
+  "slightly": "Hơi hơi :3",
+  "a_lot": "Rất nhiều <3",
+  "extreme": "Cực độ UwU",
   "max_uwu": "Tối đa",
   "invalid_constant": "Hằng số không hợp lệ! Phải có tối đa 4 chữ số thập phân trong khoảng từ -999 đến 999",
   "rerate": "Đánh giá lại",
@@ -83,7 +83,7 @@
     "FILTERS": "Bộ lọc (Trang {page}/{pageCount})",
     "ADVANCED_SEARCH": "Tìm kiếm nâng cao",
     "STAFF_PICK_SEARCH_DESC": "Tùy chỉnh bộ lọc chart được đánh giá bởi đội ngũ. (Mặc định sẽ được tùy chọn theo \"Cấu hình\")",
-    "STAFF_PICK_CONFIG_DESC": "Tùy chỉnh bộ lọc chart được đánh giá bởi đội ngũ. Mặc định, mọi chart sẽ được hiện thị\n\nLƯU Ý: Nếu bạn chọn một trong hai (\"có đánh giá\" hay \"không có đánh giá\") thì các chart khác sẽ bị loại trừ khỏi danh sách (trừ mục Staff Pick ra)",
+    "STAFF_PICK_CONFIG_DESC": "Tùy chỉnh bộ lọc chart được đánh giá bởi đội ngũ. Mặc định, mọi chart sẽ được hiện thị\n\nLƯU Ý: Nếu bạn chọn một trong hai (\"có đánh giá\" hay \"không có đánh giá\") thì các chart khác sẽ bị loại trừ khỏi danh sách (trừ mục Staff Pick và Non-Staff Pick ra)",
     "STAFF_PICK_OFF": "Hiển thị tất cả",
     "STAFF_PICK_TRUE": "Chỉ hiện chart được đánh giá",
     "STAFF_PICK_FALSE": "Chỉ hiện chart chưa được đánh giá",
@@ -126,7 +126,7 @@
     "ACCURACY_SCORE": "Độ chính xác",
     "ARCADE_SCORE_NO_SPEED": "Điểm số (không tính thêm điểm tốc độ nhạc)",
     "RANK_MATCH": "Đấu hạng",
-    "LEAST_COMBO_BREAKS": "Đạt Combo nhiều nhất",
+    "LEAST_COMBO_BREAKS": "Đạt nhiều Combo nhất",
     "LEAST_MISSES": "Đạt ít Miss nhất",
     "PERFECT": "Đạt nhiều Perfect nhất",
     "BAD_ENGINE": "Server không hỗ trợ gửi kết quả điểm đến engine {engine_name}"
@@ -134,7 +134,7 @@
   "background": {
     "BACKGROUNDSELECT": "Hình nền mặc định",
     "BACKGROUNDSELECTSUB": "Hãy chọn hình nền trong Cấu hình.",
-    "USEBACKGROUNDDESC": "Chọn hình nền để dùng! \"Ảnh đĩa nhạc\" là ảnh theo đĩa nhạc có nền PJSK, còn \"Ảnh nền\" là ảnh ở bên ngoài do người làm chart tải lên, không có nền PJSK\n\nLƯU Ý: Nếu \"Ảnh nền\" không có sẵn hoặc bị lỗi không tải được, mặc định sẽ tùy chọn về \"Ảnh đĩa nhạc\"",
+    "USEBACKGROUNDDESC": "Chọn hình nền để dùng! \"Ảnh đĩa nhạc\" là ảnh theo đĩa nhạc có nền PJSK, còn \"Ảnh nền\" là ảnh ở bên ngoài do người làm chart tải lên, không có nền PJSK\n\nLƯU Ý: Nếu bạn chọn \"Ảnh nền\" mà họ không có sẵn để upload lên hoặc bị lỗi không tải được, mặc định sẽ tùy chọn về \"Ảnh đĩa nhạc\"",
     "USEBACKGROUND": "Hình nền (trong màn chơi)",
     "V1": "Ảnh đĩa nhạc (PJSK V1)",
     "V3": "Ảnh đĩa nhạc (PJSK V3)",
@@ -144,7 +144,7 @@
   },
   "playlist": {
     "UPLOADED": "Chart của bạn",
-    "UPLOADEDSUB": "Xem tất cả chart của bạn đã tải lên."
+    "UPLOADEDSUB": "Xem tất cả chart của bạn đã đăng lên."
   },
   "notification": {
     "NOTIFICATION": "Thông báo",
