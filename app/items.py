@@ -224,7 +224,7 @@ class LevelKit:
         return engine
 
     def _skin(self, engine_name: str) -> SkinItem | None:
-        """Pick the configured skin for an engine, matching the old selection rules.
+        """Pick the skin of the player's chosen theme for an engine, preferring their language.
 
         Args:
             engine_name: Engine the level uses.
@@ -236,7 +236,7 @@ class LevelKit:
             skin
             for skin in self.skins
             if skin.themes
-            and skin.item.name in skin.themes
+            and self.state.skin in skin.themes
             and (not skin.engines or engine_name in skin.engines)
         ]
         if not candidates:

@@ -83,7 +83,7 @@ async def build_state(context: AppContext, request: Request) -> RequestState:
     staff_pick = query.get("stpickconfig", "off").lower()
     particle = query.get("defaultparticle", ENGINE_DEFAULT).lower()
     show_resource_buttons = query.get("showresourcebuttons", "0")
-    skin = query.get("defaultskin", ENGINE_DEFAULT).lower()
+    skin = query.get("defaultskin", ENGINE_DEFAULT)
     loc, localization = context.locales.get_messages(raw_locale)
     resources = context.resources
     skins = await resources.skins()
