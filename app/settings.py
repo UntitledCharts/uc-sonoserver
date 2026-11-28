@@ -1,7 +1,11 @@
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+LOOPBACK_HOSTS = ("localhost", "127.0.0.1", "::1")
 
 
 class _Section(BaseModel):
@@ -64,6 +68,22 @@ class BackendConfig(_Section):
     url: str
     sonoserver_key: str
     timeout_seconds: float = Field(gt=0)
+
+    @field_validator("url")
+    @classmethod
+    def secure_url(cls, url: str) -> str:
+        """Require HTTPS for a backend that isn't on this machine, since requests carry secrets.
+
+        Args:
+            url: Configured backend URL.
+
+        Returns:
+            str: The URL.
+        """
+        parts = urlsplit(url)
+        if parts.scheme == "https" or (parts.scheme == "http" and parts.hostname in LOOPBACK_HOSTS):
+            return url
+        raise ValueError("must be https, or http on localhost, 127.0.0.1 or ::1")
 
 
 class KeysConfig(_Section):

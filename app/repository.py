@@ -78,7 +78,7 @@ class Repository:
         self._root = root
 
     async def add_file(self, file: str, error_on_file_nonexistent: bool = True) -> str | None:
-        """Store a file under its hash, dropping the blob of an older version.
+        """Store a file under its hash, keeping older blobs that cached locators may still use.
 
         Args:
             file: Relative path like ``files/skins/x/data``, optionally with zip members.
@@ -91,11 +91,6 @@ class Repository:
             return None
         data = await asyncio.to_thread(read_file_bytes, self._root, file)
         digest = sha1_hex(data)
-        old_hash = await self._redis.get(REPO_PATH_PREFIX + file)
-        if old_hash:
-            old = old_hash.decode()
-            if old != digest:
-                await self._redis.delete(REPO_DATA_PREFIX + old)
         await self._redis.set(REPO_DATA_PREFIX + digest, data)
         await self._redis.set(REPO_PATH_PREFIX + file, digest)
         return digest

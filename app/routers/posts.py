@@ -159,9 +159,8 @@ async def _notification_window(
         )
         for index in range(offset, offset + size, chunk)
     ]
-    counter = backend(client.notification_window(state.session, 0, 1), Site.DETAIL, loc)
-    total_page, *pages = await asyncio.gather(counter, *calls)
-    return [item for page in pages for item in page.items], total_page.page_count
+    pages = await asyncio.gather(*calls)
+    return [item for page in pages for item in page.items], pages[0].total
 
 
 def merge_page(

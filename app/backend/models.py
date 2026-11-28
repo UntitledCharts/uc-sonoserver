@@ -369,9 +369,11 @@ class NotificationPage(Page[Notification]):
     """A page of notifications.
 
     Attributes:
+        total: Notifications in total, counted in the same snapshot as the items.
         unread_count: Unread notifications in total.
     """
 
+    total: int
     unread_count: int
 
 
