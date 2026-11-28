@@ -44,6 +44,16 @@ class FileRef(BackendModel):
     url: str
 
 
+class SiteAssets(BackendModel):
+    """Shared site images served from storage.
+
+    Attributes:
+        banner: Server banner.
+    """
+
+    banner: FileRef | None = None
+
+
 class AccountSummary(BackendModel):
     """Short account reference.
 

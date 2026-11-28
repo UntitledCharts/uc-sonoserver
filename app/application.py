@@ -10,6 +10,7 @@ from redis.asyncio import Redis
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from app.backend.client import BackendClient
+from app.banner import Banner
 from app.context import AppContext
 from app.errors import install_error_handlers
 from app.localization import LocaleManager
@@ -97,15 +98,17 @@ def create_app(config: Config, constants: Constants) -> FastAPI:
         )
         store = Repository(redis, ROOT)
         compiled = Resources(ROOT, store, locales, config.server.public_url)
+        backend = BackendClient(http, config.backend.url, config.backend.sonoserver_key)
         app.state.context = AppContext(
             config=config,
             constants=constants,
             http=http,
-            backend=BackendClient(http, config.backend.url, config.backend.sonoserver_key),
+            backend=backend,
             redis=redis,
             repository=store,
             locales=locales,
             resources=compiled,
+            banner=Banner(backend, constants.assets.banner_cache_seconds),
             engine_rules=engine_rules,
         )
         await compiled.engines("en")

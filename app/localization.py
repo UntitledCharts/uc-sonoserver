@@ -411,13 +411,13 @@ class SearchTexts(_Group):
         return self._get("ARTISTS_CONTAINS")
 
     @property
-    def AUTHOR_CONTAINS(self) -> str:
-        """The ``AUTHOR_CONTAINS`` text.
+    def CHARTER_CONTAINS(self) -> str:
+        """The ``CHARTER_CONTAINS`` text.
 
         Returns:
             str: The localized text.
         """
-        return self._get("AUTHOR_CONTAINS")
+        return self._get("CHARTER_CONTAINS")
 
     @property
     def ONLY_LEVELS_I_LIKED(self) -> str:
@@ -1125,6 +1125,24 @@ class Loc(_Group):
         return self._get("make_public_confirm_title")
 
     @property
+    def make_public_confirm_joke(self) -> str:
+        """The ``make_public_confirm_joke`` text.
+
+        Returns:
+            str: The localized text.
+        """
+        return self._get("make_public_confirm_joke")
+
+    @property
+    def make_public_confirm_official(self) -> str:
+        """The ``make_public_confirm_official`` text.
+
+        Returns:
+            str: The localized text.
+        """
+        return self._get("make_public_confirm_official")
+
+    @property
     def make_public_confirm_bpm(self) -> str:
         """The ``make_public_confirm_bpm`` text.
 
@@ -1159,6 +1177,39 @@ class Loc(_Group):
             str: The localized text.
         """
         return self._get("make_public_confirm_required")
+
+    @property
+    def make_public_preview_required(self) -> str:
+        """The ``make_public_preview_required`` text.
+
+        Returns:
+            str: The localized text.
+        """
+        return self._get("make_public_preview_required")
+
+    def make_public_chart_too_short(self, seconds: float, min_seconds: float) -> str:
+        """The ``make_public_chart_too_short`` text with its placeholders filled.
+
+        Args:
+            seconds: Time of the chart's last note, in seconds.
+            min_seconds: Shortest chart allowed to go public, in seconds.
+
+        Returns:
+            str: The localized text.
+        """
+        whole = int(seconds)
+        return self._get("make_public_chart_too_short").format(
+            seconds=f"{whole // 60}:{whole % 60:02d}", min_seconds=f"{min_seconds:g}"
+        )
+
+    @property
+    def make_public_force(self) -> str:
+        """The ``make_public_force`` text.
+
+        Returns:
+            str: The localized text.
+        """
+        return self._get("make_public_force")
 
     @property
     def ban(self) -> str:

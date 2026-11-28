@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class _Section(BaseModel):
-    """Base for config sections that rejects unknown keys.
+    """Base for config and constants sections: every key required, unknown keys rejected.
 
     Attributes:
         model_config: Pydantic configuration forbidding extra keys.
@@ -20,18 +20,20 @@ class ServerConfig(_Section):
     Attributes:
         host: Interface uvicorn binds to.
         port: Port uvicorn listens on.
+        workers: uvicorn worker processes.
         debug: Enables the API docs and access logs only.
         public_url: Public base URL of this Sonolus server, without a trailing slash.
         allowed_hosts: Host headers accepted.
         trusted_proxies: Number of proxies in front of the app adding X-Forwarded-For entries.
     """
 
-    host: str = "0.0.0.0"
-    port: int = 39039
-    debug: bool = False
-    public_url: str = "https://untitledcharts.com"
-    allowed_hosts: list[str] = Field(default_factory=lambda: ["untitledcharts.com"])
-    trusted_proxies: int = 2
+    host: str
+    port: int
+    workers: int = Field(ge=1)
+    debug: bool
+    public_url: str
+    allowed_hosts: list[str]
+    trusted_proxies: int = Field(ge=0)
 
 
 class SonolusConfig(_Section):
@@ -44,10 +46,10 @@ class SonolusConfig(_Section):
         chart_prefix: Prefix of chart item names.
     """
 
-    version: str = "1.1.5"
-    title: str = "UntitledCharts"
-    description: str = "discord.gg/UntitledCharts\nA custom chart server :)"
-    chart_prefix: str = "UnCh-"
+    version: str
+    title: str
+    description: str
+    chart_prefix: str
 
 
 class BackendConfig(_Section):
@@ -59,9 +61,9 @@ class BackendConfig(_Section):
         timeout_seconds: Total timeout of one backend request.
     """
 
-    url: str = "http://127.0.0.1:39000"
+    url: str
     sonoserver_key: str
-    timeout_seconds: float = 10
+    timeout_seconds: float = Field(gt=0)
 
 
 class KeysConfig(_Section):
@@ -84,10 +86,10 @@ class RedisConfig(_Section):
         password: Redis password, None for none.
     """
 
-    host: str = "127.0.0.1"
-    port: int = 6379
-    db: int = 0
-    password: str | None = None
+    host: str
+    port: int
+    db: int = Field(ge=0)
+    password: str | None
 
 
 class Config(_Section):
@@ -101,11 +103,21 @@ class Config(_Section):
         redis: Redis connection settings.
     """
 
-    server: ServerConfig = Field(default_factory=ServerConfig)
-    sonolus: SonolusConfig = Field(default_factory=SonolusConfig)
+    server: ServerConfig
+    sonolus: SonolusConfig
     backend: BackendConfig
     keys: KeysConfig
-    redis: RedisConfig = Field(default_factory=RedisConfig)
+    redis: RedisConfig
+
+
+class AssetConstants(_Section):
+    """Shared site image constants.
+
+    Attributes:
+        banner_cache_seconds: Seconds the server banner from the backend is reused.
+    """
+
+    banner_cache_seconds: float = Field(ge=0)
 
 
 class RequestConstants(_Section):
@@ -232,6 +244,7 @@ class Constants(_Section):
     """
 
     website_url: str
+    assets: AssetConstants
     requests: RequestConstants
     replays: ReplayConstants
     lists: ListConstants

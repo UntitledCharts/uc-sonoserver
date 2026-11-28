@@ -1,5 +1,8 @@
 website_url: https://untitledcharts.com  # website players are sent to for uploading levels
 
+assets:
+  banner_cache_seconds: 300  # 5 minutes before the server banner is asked from the backend again
+
 requests:
   max_body_size: 65536  # 64 KiB per request body; the replay upload has its own limits below
 

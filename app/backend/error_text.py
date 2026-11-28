@@ -1,6 +1,7 @@
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import Any
 
 from app.backend.client import BackendError
 from app.errors import SonolusError, reason_phrase
@@ -34,7 +35,10 @@ AUTHENTICATE_TEXTS: dict[str, tuple[int, str]] = {
     "error.sonolus.signature_invalid": (400, "Invalid signature"),
     "error.sonolus.wrong_type": (400, "Bad Request"),
     "error.sonolus.wrong_server": (418, "Are you connecting to the right server?"),
-    "error.sonolus.time_invalid": (400, "Invalid time. Please click 'Cancel' and try again."),
+    "error.sonolus.time_invalid": (
+        400,
+        "Invalid time. Please click 'Cancel' and try again.",
+    ),
 }
 
 AUTHENTICATE_EXTERNAL_TEXTS: dict[str, tuple[int, str]] = {
@@ -114,6 +118,17 @@ RULES: dict[Site, SiteRule] = {
 }
 
 
+CODE_TEXTS: dict[str, tuple[int, Callable[[Loc, Mapping[str, Any]], str]]] = {
+    "error.chart.preview_required": (409, lambda loc, _: loc.make_public_preview_required),
+    "error.chart.too_short": (
+        409,
+        lambda loc, params: loc.make_public_chart_too_short(
+            float(params.get("seconds", 0)), float(params.get("min_seconds", 0))
+        ),
+    ),
+}
+
+
 def to_sonolus_error(error: BackendError, site: Site, loc: Loc) -> SonolusError:
     """Translate a backend error into what players saw from the old server at a call site.
 
@@ -125,6 +140,9 @@ def to_sonolus_error(error: BackendError, site: Site, loc: Loc) -> SonolusError:
     Returns:
         SonolusError: The error to raise.
     """
+    if error.code in CODE_TEXTS:
+        status, text = CODE_TEXTS[error.code]
+        return SonolusError(status, text(loc, error.params))
     rule = RULES[site]
     status, detail = BACKEND_DETAILS.get(error.code, (error.status, reason_phrase(error.status)))
     status = rule.statuses.get(error.code, status)

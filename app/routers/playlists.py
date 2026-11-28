@@ -49,7 +49,7 @@ async def playlists_info(context: Context, state: State) -> Response:
     """
     loc = state.loc
     resources = context.resources
-    banner = await resources.banner()
+    banner = await context.banner.get()
     playlists = await resources.playlists(state.localization)
     size = context.constants.lists.resource_section_size
     return respond(
@@ -84,7 +84,11 @@ async def playlists_list(state: State) -> Response:
 
 
 def filter_options(
-    state: RequestState, constants: Constants, params: Filter, page: int, page_count: int
+    state: RequestState,
+    constants: Constants,
+    params: Filter,
+    page: int,
+    page_count: int,
 ) -> list[ServerOption]:
     """Build the uploaded charts filter form, prefilled with the current filters.
 
@@ -156,7 +160,7 @@ def filter_options(
         ),
         text_option(
             "author_includes",
-            search.AUTHOR_CONTAINS,
+            search.CHARTER_CONTAINS,
             params["author_includes"] or "",
             search.ENTER_TEXT,
             limits.author_limit,
@@ -194,7 +198,11 @@ def filter_options(
             limits.max_count,
         ),
         slider_option(
-            "min_comments", search.MIN_COMMENTS, params["min_comments"] or 0, 0, limits.max_count
+            "min_comments",
+            search.MIN_COMMENTS,
+            params["min_comments"] or 0,
+            0,
+            limits.max_count,
         ),
         slider_option(
             "max_comments",
@@ -296,7 +304,9 @@ async def playlist_details(item_name: str, context: Context, state: State) -> Re
     page = params["page"] or 1
     check_page(page, context.constants.lists.max_page)
     result = await backend(
-        context.backend.list_charts(state.session, search_query(params, page)), Site.DETAIL, loc
+        context.backend.list_charts(state.session, search_query(params, page)),
+        Site.DETAIL,
+        loc,
     )
     kit = await level_kit(context, state)
     levels = [kit.level(chart) for chart in result.items]

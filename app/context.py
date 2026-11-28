@@ -5,6 +5,7 @@ from redis.asyncio import Redis
 from starlette.requests import HTTPConnection
 
 from app.backend.client import BackendClient
+from app.banner import Banner
 from app.localization import LocaleManager
 from app.replay import EngineOption
 from app.repository import Repository
@@ -25,6 +26,7 @@ class AppContext:
         repository: Blob repository.
         locales: Locale manager.
         resources: Items compiled from ``files/``.
+        banner: Server banner from the backend.
         engine_rules: Option checks of the rankable engines.
     """
 
@@ -36,6 +38,7 @@ class AppContext:
     repository: Repository
     locales: LocaleManager
     resources: Resources
+    banner: Banner
     engine_rules: dict[str, list[EngineOption]]
 
 

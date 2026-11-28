@@ -65,7 +65,7 @@
   "unlike": "({num}) Beğeniyi geri al",
   "announcements": "Duyurular",
   "search": {
-    "FILTERS": "Filtreler (Sayfa {sayfa}/{sayfaSayısı})",
+    "FILTERS": "Filtreler (Sayfa {page}/{pageCount})",
     "ADVANCED_SEARCH": "Gelişmiş Arama",
     "STAFF_PICK_SEARCH_DESC": "Personel seçimlerine göre filtrelensin mi? (Varsayılan davranışı Yapılandırma bölümünden ayarlayabilirsiniz)",
     "STAFF_PICK_CONFIG_DESC": "Personel seçimlerine göre filtrelensin mi? Varsayılan olarak, tüm haritalar gösterilir.\n\nNOT: Çeşitlilik sağlamak için seviyelerde seçtiğinizin tam tersini her zaman göstereceğiz. Örneğin personel seçimlerini kapatmak, seviyelerde her zaman bir seçim gösterirken, personel seçimlerini açmak, seviyelerde her zaman personel olmayan bir seçim gösterecektir.",
@@ -77,7 +77,7 @@
     "TITLE_CONTAINS": "Başlık Şunları İçeriyor:",
     "DESCRIPTION_CONTAINS": "Açıklama Şunları İçeriyor:",
     "ARTISTS_CONTAINS": "Sanatçılar Şunları İçeriyor:",
-    "AUTHOR_CONTAINS": "Harita Sahibi Adı Şunları İçeriyor:",
+    "CHARTER_CONTAINS": "Harita Sahibi Adı Şunları İçeriyor:",
     "ONLY_LEVELS_I_LIKED": "Sadece Beğendiğim Seviyeler",
     "ONLY_LEVELS_I_COMMENTED_ON": "Sadece Yorum Yaptığım Seviyeler",
     "MIN_LIKES": "En Düşük Beğeni",

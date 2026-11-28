@@ -82,7 +82,7 @@
     "TITLE_CONTAINS": "Имеет в Названии",
     "DESCRIPTION_CONTAINS": "Имеет в Описании",
     "ARTISTS_CONTAINS": "Имеет в Артистах",
-    "AUTHOR_CONTAINS": "Имя Автора Чарта Содержит",
+    "CHARTER_CONTAINS": "Имя Автора Чарта Содержит",
     "ONLY_LEVELS_I_LIKED": "Только уровни которые я лайкнул",
     "ONLY_LEVELS_I_COMMENTED_ON": "Только Уровные Которые Я Прокомментировал",
     "MIN_LIKES": "Мин. кол-во лайков",

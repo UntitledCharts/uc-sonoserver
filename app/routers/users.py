@@ -91,7 +91,10 @@ async def user_details(user_id: str, context: Context, state: State) -> Response
                         requireConfirmation=True,
                         options=[
                             toggle_option(
-                                "delete", loc.ban_delete, True, description=loc.ban_delete_desc
+                                "delete",
+                                loc.ban_delete,
+                                True,
+                                description=loc.ban_delete_desc,
                             ),
                             toggle_option(
                                 "_",
@@ -148,7 +151,9 @@ async def user_submit(
             if not form.confirmed:
                 raise SonolusError(400, loc.ban_confirm)
             await backend(
-                context.backend.ban(session, user_id, form.delete), Site.ACCOUNT_MODERATION, loc
+                context.backend.ban(session, user_id, form.delete),
+                Site.ACCOUNT_MODERATION,
+                loc,
             )
         case "unban":
             await backend(context.backend.unban(session, user_id), Site.ACCOUNT_MODERATION, loc)

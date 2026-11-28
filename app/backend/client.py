@@ -23,6 +23,7 @@ from app.backend.models import (
     PromotionServe,
     RecordDetails,
     ReplaySaved,
+    SiteAssets,
 )
 
 ModelT = TypeVar("ModelT", bound=BaseModel)
@@ -209,6 +210,14 @@ class BackendClient:
         )
         return ChartDetails.model_validate_json(body)
 
+    async def assets(self) -> SiteAssets:
+        """Return the shared site images.
+
+        Returns:
+            SiteAssets: The images.
+        """
+        return SiteAssets.model_validate_json(await self._request("GET", "/v1/assets"))
+
     async def list_charts(self, session: str | None, query: Query) -> Page[Chart]:
         """Search charts.
 
@@ -233,7 +242,10 @@ class BackendClient:
             list[Chart]: The charts.
         """
         body = await self._request(
-            "GET", "/v1/charts/random", session=session, query={"staff_pick": staff_pick}
+            "GET",
+            "/v1/charts/random",
+            session=session,
+            query={"staff_pick": staff_pick},
         )
         return CHART_LIST.validate_json(body)
 
@@ -269,19 +281,22 @@ class BackendClient:
         """
         await self._request("POST", f"/v1/charts/{segment(chart_id)}/restore", session=session)
 
-    async def set_visibility(self, session: str | None, chart_id: str, status: str) -> None:
+    async def set_visibility(
+        self, session: str | None, chart_id: str, status: str, force: bool = False
+    ) -> None:
         """Change a chart's visibility.
 
         Args:
             session: Player session.
             chart_id: Validated chart id.
             status: PUBLIC, UNLISTED or PRIVATE.
+            force: Make it public without a preview, as staff.
         """
         await self._request(
             "PUT",
             f"/v1/charts/{segment(chart_id)}/visibility",
             session=session,
-            json_body={"status": status},
+            json_body={"status": status, "force": force},
         )
 
     async def set_rating(self, session: str | None, chart_id: str, rating: float) -> None:
@@ -367,7 +382,12 @@ class BackendClient:
         return Comment.model_validate_json(body)
 
     async def leaderboard(
-        self, session: str | None, chart_id: str, leaderboard_type: str, page: int, limit: int
+        self,
+        session: str | None,
+        chart_id: str,
+        leaderboard_type: str,
+        page: int,
+        limit: int,
     ) -> LeaderboardPage:
         """List a chart's leaderboard.
 
@@ -663,7 +683,10 @@ class BackendClient:
         form.add_field("engine_name", engine_name)
         form.add_field("speed", str(speed))
         form.add_field(
-            "replay_data", replay_data, content_type="application/gzip", filename="replay_data"
+            "replay_data",
+            replay_data,
+            content_type="application/gzip",
+            filename="replay_data",
         )
         form.add_field(
             "replay_config",

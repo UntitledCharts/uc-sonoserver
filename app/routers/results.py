@@ -46,7 +46,12 @@ async def result_info() -> Response:
     return respond(
         ServerLevelResultInfo(
             submits=[
-                ServerForm(type="replay", title="#REPLAY", requireConfirmation=False, options=[])
+                ServerForm(
+                    type="replay",
+                    title="#REPLAY",
+                    requireConfirmation=False,
+                    options=[],
+                )
             ]
         )
     )
@@ -145,7 +150,11 @@ async def _read_file(upload: UploadFile, limit: int) -> bytes:
 
 
 async def _save_replay(
-    request: Request, context: AppContext, state: RequestState, key: UploadKeyData, session: str
+    request: Request,
+    context: AppContext,
+    state: RequestState,
+    key: UploadKeyData,
+    session: str,
 ) -> None:
     """Check the uploaded replay files against the signed key and save the record.
 
@@ -162,7 +171,8 @@ async def _save_replay(
     if chart is None:
         raise SonolusError(400)
     body = await _read_body(
-        request, limits.max_data_size + limits.max_config_size + limits.max_multipart_overhead
+        request,
+        limits.max_data_size + limits.max_config_size + limits.max_multipart_overhead,
     )
 
     async def receive() -> Message:

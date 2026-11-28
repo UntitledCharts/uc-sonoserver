@@ -87,7 +87,11 @@ def delete_form() -> ServerForm:
         ServerForm: The form.
     """
     return ServerForm(
-        type="delete", title="#DELETE", icon="delete", requireConfirmation=True, options=[]
+        type="delete",
+        title="#DELETE",
+        icon="delete",
+        requireConfirmation=True,
+        options=[],
     )
 
 
@@ -301,7 +305,10 @@ class LevelKit:
         )
         metadata = [
             Tag(title=date, icon="clock"),
-            Tag(title=str(chart.like_count), icon="heart" if chart.liked else "heartHollow"),
+            Tag(
+                title=str(chart.like_count),
+                icon="heart" if chart.liked else "heartHollow",
+            ),
             Tag(title=str(chart.comment_count), icon="comment"),
         ]
         if context == "list":
@@ -318,11 +325,17 @@ class LevelKit:
                 + [Tag(title=state.owo(tag), icon="tag") for tag in chart.tags]
             )
         if chart.staff_pick:
-            tags.insert(0, Tag(title=loc.staff_pick if context == "level" else None, icon="trophy"))
+            tags.insert(
+                0,
+                Tag(title=loc.staff_pick if context == "level" else None, icon="trophy"),
+            )
         return tags
 
     def level(
-        self, chart: Chart, context: LevelContext = "list", use_engine: str | None = None
+        self,
+        chart: Chart,
+        context: LevelContext = "list",
+        use_engine: str | None = None,
     ) -> LevelItem:
         """Turn a chart into a level item, owoifying its title, artists and tags.
 
@@ -435,7 +448,9 @@ def comment_item(
         authorUser=user_item(author) if author else None,
         time=epoch_ms(comment.created_at),
         content=state.owo(content),
-        actions=[delete_form()] if (comment.is_own or can_moderate) and not comment.deleted else [],
+        actions=(
+            [delete_form()] if (comment.is_own or can_moderate) and not comment.deleted else []
+        ),
     )
 
 
@@ -459,9 +474,11 @@ def notification_post(notification: Notification, state: RequestState, source: s
         time=epoch_ms(notification.created_at),
         author=NOTIFICATION_AUTHOR,
         tags=[
-            Tag(title=loc.notification.READ_STATUS, icon="envelopeOpen")
-            if notification.is_read
-            else Tag(title=loc.notification.UNREAD_STATUS, icon="envelope")
+            (
+                Tag(title=loc.notification.READ_STATUS, icon="envelopeOpen")
+                if notification.is_read
+                else Tag(title=loc.notification.UNREAD_STATUS, icon="envelope")
+            )
         ],
     )
 
@@ -617,7 +634,12 @@ def replay_item(kit: LevelKit, record: LeaderboardRecord, chart: Chart) -> Repla
         subtitle=subtitle,
         author=record.display_name,
         authorUser=user_item(record.submitter) if record.submitter else None,
-        tags=[Tag(title=kit.state.owo(loc.time_ago(time_ago(record.created_at))), icon="clock")],
+        tags=[
+            Tag(
+                title=kit.state.owo(loc.time_ago(time_ago(record.created_at))),
+                icon="clock",
+            )
+        ],
         level=level,
         data=srl(record.replay.data),
         configuration=srl(record.replay.configuration),

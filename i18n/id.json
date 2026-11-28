@@ -77,7 +77,7 @@
     "TITLE_CONTAINS": "Terkandung Judul",
     "DESCRIPTION_CONTAINS": "Terkandung Deskripsi",
     "ARTISTS_CONTAINS": "Terkandung Artis",
-    "AUTHOR_CONTAINS": "Terkandung Author Level",
+    "CHARTER_CONTAINS": "Terkandung Author Level",
     "ONLY_LEVELS_I_LIKED": "Hanya Level yang Disukai",
     "ONLY_LEVELS_I_COMMENTED_ON": "Hanya Level yang Saya Pernah Komen",
     "MIN_LIKES": "Jumlah Like Minimal",

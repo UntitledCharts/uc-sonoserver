@@ -40,11 +40,14 @@ async def server_info(context: Context, state: State) -> Response:
     loc = state.loc
     resources = context.resources
     logged_in = bool(state.session)
-    banner = await resources.banner()
+    banner = await context.banner.get()
     buttons: list[ServerInfoButton] = [
         ServerInfoAuthenticationButton(type="authentication"),
         ServerInfoItemButton(
-            type="post", title=loc.announcements, icon="announcement", infoType="announcements"
+            type="post",
+            title=loc.announcements,
+            icon="announcement",
+            infoType="announcements",
         ),
     ]
     if logged_in:

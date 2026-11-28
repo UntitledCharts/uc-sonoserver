@@ -18,7 +18,13 @@ from app.routers.common import (
     respond,
     select_option,
 )
-from app.sonolus_core import PostItem, ServerForm, ServerItemDetails, ServerItemInfo, ServerItemList
+from app.sonolus_core import (
+    PostItem,
+    ServerForm,
+    ServerItemDetails,
+    ServerItemInfo,
+    ServerItemList,
+)
 from app.state import Context, RequestState, State
 
 router = APIRouter()
@@ -66,16 +72,21 @@ async def posts_info(
         Response: The post info.
     """
     loc = state.loc
-    banner = await context.resources.banner()
+    banner = await context.banner.get()
     if type == "announcements":
         size = context.constants.lists.resource_section_size
         posts = await static_posts(context)
         section = PostSection(
-            title="#NEWEST", icon="post", itemType="post", items=uwu_items(posts[:size], state)
+            title="#NEWEST",
+            icon="post",
+            itemType="post",
+            items=uwu_items(posts[:size], state),
         )
     else:
         page = await backend(
-            context.backend.notifications(state.session, 0, only_unread=True), Site.DETAIL, loc
+            context.backend.notifications(state.session, 0, only_unread=True),
+            Site.DETAIL,
+            loc,
         )
         source = context.config.server.public_url
         notifications = [notification_post(item, state, source) for item in page.items]

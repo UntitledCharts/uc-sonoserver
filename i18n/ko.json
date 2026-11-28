@@ -77,7 +77,7 @@
     "TITLE_CONTAINS": "제목",
     "DESCRIPTION_CONTAINS": "설명",
     "ARTISTS_CONTAINS": "작곡가명",
-    "AUTHOR_CONTAINS": "채보 제작자명",
+    "CHARTER_CONTAINS": "채보 제작자명",
     "ONLY_LEVELS_I_LIKED": "내가 좋아요한 레벨만 표시",
     "ONLY_LEVELS_I_COMMENTED_ON": "내가 댓글을 게시한 레벨만 표시",
     "MIN_LIKES": "최소 좋아요 수",

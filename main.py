@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import sys
 from pathlib import Path
 
 import uvicorn
@@ -22,11 +23,16 @@ def main() -> None:
     os.environ[CONFIG_ENV] = str(config_path)
     os.environ[CONSTANTS_ENV] = str(constants_path)
     logging.basicConfig(level=logging.DEBUG if config.server.debug else logging.INFO)
+    workers = config.server.workers
+    if sys.platform == "win32" and workers > 1:
+        logging.warning("uvicorn can't serve with several workers on Windows, starting 1")
+        workers = 1
     uvicorn.run(
         "app.application:create_app_from_env",
         factory=True,
         host=config.server.host,
         port=config.server.port,
+        workers=workers,
         access_log=config.server.debug,
         proxy_headers=False,
     )

@@ -480,7 +480,8 @@ map_ry_to_wwy = _replacer((RY_TO_WWY, "wwy"))
 map_r_or_l_to_w = _replacer((RORL_TO_W_LOWER, "w"), (RORL_TO_W_UPPER, "W"))
 map_ll_to_ww = _replacer((LL_TO_WW, "ww"))
 map_vowel_or_r_except_o_l_to_wl = _replacer(
-    (VOWEL_OR_R_EXCEPT_O_L_TO_WL_LOWER, "wl"), (VOWEL_OR_R_EXCEPT_O_L_TO_WL_UPPER, "W\\1")
+    (VOWEL_OR_R_EXCEPT_O_L_TO_WL_LOWER, "wl"),
+    (VOWEL_OR_R_EXCEPT_O_L_TO_WL_UPPER, "W\\1"),
 )
 map_old_to_owld = _replacer((OLD_TO_OWLD_LOWER, "\\1wld"), (OLD_TO_OWLD_UPPER, "OWLD"))
 map_ol_to_owl = _replacer((OL_TO_OWL_LOWER, "\\1wl"), (OL_TO_OWL_UPPER, "OWL"))
@@ -502,7 +503,9 @@ map_fuc_to_fwuc = _replacer((FUC_TO_FWUC, "\\1wuc"))
 map_mom_to_mwom = _replacer((MOM_TO_MWOM, "\\1wom"))
 map_me_to_mwe = _replacer((ME_TO_MWE_UPPER, "Mwe"), (ME_TO_MWE_LOWER, "mwe"))
 map_n_vowel_to_ny = _replacer(
-    (N_VOWEL_TO_NY_FIRST, "ny\\1"), (N_VOWEL_TO_NY_SECOND, "Ny\\1"), (N_VOWEL_TO_NY_THIRD, "NY\\1")
+    (N_VOWEL_TO_NY_FIRST, "ny\\1"),
+    (N_VOWEL_TO_NY_SECOND, "Ny\\1"),
+    (N_VOWEL_TO_NY_THIRD, "NY\\1"),
 )
 map_ove_to_uv = _replacer((OVE_TO_UV_LOWER, "uv"), (OVE_TO_UV_UPPER, "UV"))
 map_haha_to_hehe_xd = _replacer((HAHA_TO_HEHE_XD, "hehe xD"))
@@ -586,7 +589,13 @@ def _mapping_lists(
                 map_meme_to_mem,
                 map_feel_to_fell,
             ],
-            [map_o_to_owo, map_ew_to_uwu, map_hey_to_hay, map_dead_to_ded, map_n_vowel_t_to_nd],
+            [
+                map_o_to_owo,
+                map_ew_to_uwu,
+                map_hey_to_hay,
+                map_dead_to_ded,
+                map_n_vowel_t_to_nd,
+            ],
             [
                 map_brackets_to_star_trails_pre(symbols),
                 map_period_comma_exclamation_semicolon_to_kaomojis_pre(symbols),

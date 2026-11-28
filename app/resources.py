@@ -212,17 +212,6 @@ class Resources:
             self._cache[key] = value
             return value
 
-    async def banner(self) -> Srl | None:
-        """Store the server banner and return its locator, reading it again on every call.
-
-        Returns:
-            Srl | None: The locator, or None without a banner.
-        """
-        path = "files/banner/banner.png"
-        if (self._root / path).exists():
-            return await self._srl(path)
-        return None
-
     async def playlists(self, locale: str) -> list[PlaylistItem]:
         """Compile the playlists.
 

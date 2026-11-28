@@ -107,7 +107,7 @@ async def resource_info(item_type: ItemType, context: Context, state: State) -> 
         Response: The item info.
     """
     loc = state.loc
-    banner = await context.resources.banner()
+    banner = await context.banner.get()
     items = await resource_items(context, state, item_type, for_engine=True)
     if items is None:
         raise SonolusError(404, loc.item_type_not_found(item_type))
@@ -185,7 +185,8 @@ async def resource_details(
         item = next((entry for entry in items if entry.name == item_name), None)
         if item is None:
             raise SonolusError(
-                404, loc.item_not_found(item_type.capitalize().removesuffix("s"), item_name)
+                404,
+                loc.item_not_found(item_type.capitalize().removesuffix("s"), item_name),
             )
         if item_type == "engines":
             engines = await context.resources.engines(state.localization)

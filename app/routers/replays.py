@@ -94,7 +94,7 @@ async def replays_info(context: Context, state: State) -> Response:
                     items=await replay_items(context, state, recent.items),
                 ),
             ],
-            banner=await context.resources.banner(),
+            banner=await context.banner.get(),
         )
     )
 
@@ -153,7 +153,9 @@ async def replay_details(item_name: str, context: Context, state: State) -> Resp
     if name is None:
         raise SonolusError(404)
     details = await backend(
-        context.backend.record(state.session, name.chart_id, name.record_id), Site.BARE, loc
+        context.backend.record(state.session, name.chart_id, name.record_id),
+        Site.BARE,
+        loc,
     )
     kit = await level_kit(context, state)
     replay = replay_item(kit, details.record, details.chart)

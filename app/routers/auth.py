@@ -5,7 +5,11 @@ from fastapi import APIRouter, Request, Response
 from pydantic import ValidationError
 
 from app.backend.client import BackendError
-from app.backend.error_text import UNSURE, authenticate_error, authenticate_external_error
+from app.backend.error_text import (
+    UNSURE,
+    authenticate_error,
+    authenticate_external_error,
+)
 from app.errors import SonolusError
 from app.routers.common import respond
 from app.sonolus_core import (

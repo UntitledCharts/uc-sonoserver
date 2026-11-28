@@ -27,7 +27,15 @@ FIELDS = (
     "level_status",
     "keywords",
 )
-SORT_BY_VALUES = ["created_at", "rating", "likes", "comments", "decaying_likes", "abc", "random"]
+SORT_BY_VALUES = [
+    "created_at",
+    "rating",
+    "likes",
+    "comments",
+    "decaying_likes",
+    "abc",
+    "random",
+]
 SORT_ORDER_VALUES = ["desc", "asc"]
 LEVEL_STATUSES = ["ALL", "PUBLIC_MINE", "UNLISTED", "PRIVATE"]
 STAFF_PICKS = {"off": None, "default": None, "true": True, "false": False}

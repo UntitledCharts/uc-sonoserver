@@ -51,7 +51,14 @@ router = APIRouter()
 item_router = APIRouter()
 
 SortBy = Literal[
-    "created_at", "published_at", "rating", "likes", "comments", "decaying_likes", "abc", "random"
+    "created_at",
+    "published_at",
+    "rating",
+    "likes",
+    "comments",
+    "decaying_likes",
+    "abc",
+    "random",
 ]
 LEADERBOARD_TYPES = (
     ("arcade_score_speed", "ARCADE_SCORE_SPEED"),
@@ -74,9 +81,12 @@ class LevelAction(BaseModel):
         visibility: Chosen visibility.
         constant: New rating text.
         confirm_finished: Make public confirmation.
+        confirm_joke: Make public confirmation.
+        confirm_official: Make public confirmation.
         confirm_jacket: Make public confirmation.
         confirm_title: Make public confirmation.
         confirm_bpm: Make public confirmation.
+        force: Staff make public without a preview.
         confirmed: The ``#CONFIRM`` toggle.
     """
 
@@ -86,9 +96,12 @@ class LevelAction(BaseModel):
     visibility: Literal["UNLISTED", "PRIVATE", "PUBLIC"] | None = None
     constant: str | None = None
     confirm_finished: bool = False
+    confirm_joke: bool = False
+    confirm_official: bool = False
     confirm_jacket: bool = False
     confirm_title: bool = False
     confirm_bpm: bool = False
+    force: bool = False
     confirmed: bool = Field(default=False, alias="_")
 
 
@@ -166,16 +179,32 @@ def search_options(state: RequestState, constants: Constants) -> list[ServerOpti
             description=state.owo(search.STAFF_PICK_DESC),
         ),
         slider_option(
-            "min_rating", search.MIN_RATING, limits.min_rating, limits.min_rating, limits.max_rating
+            "min_rating",
+            search.MIN_RATING,
+            limits.min_rating,
+            limits.min_rating,
+            limits.max_rating,
         ),
         slider_option(
-            "max_rating", search.MAX_RATING, limits.max_rating, limits.min_rating, limits.max_rating
+            "max_rating",
+            search.MAX_RATING,
+            limits.max_rating,
+            limits.min_rating,
+            limits.max_rating,
         ),
         text_option(
-            "title_includes", search.TITLE_CONTAINS, "", search.ENTER_TEXT, limits.title_limit
+            "title_includes",
+            search.TITLE_CONTAINS,
+            "",
+            search.ENTER_TEXT,
+            limits.title_limit,
         ),
         text_option(
-            "author_includes", search.AUTHOR_CONTAINS, "", search.ENTER_TEXT, limits.author_limit
+            "author_includes",
+            search.CHARTER_CONTAINS,
+            "",
+            search.ENTER_TEXT,
+            limits.author_limit,
         ),
         text_option(
             "description_includes",
@@ -200,7 +229,13 @@ def search_options(state: RequestState, constants: Constants) -> list[ServerOpti
         slider_option("max_likes", search.MAX_LIKES, limits.max_count, 0, limits.max_count),
         slider_option("min_comments", search.MIN_COMMENTS, 0, 0, limits.max_count),
         slider_option("max_comments", search.MAX_COMMENTS, limits.max_count, 0, limits.max_count),
-        text_option("tags", search.TAGS_COMMA_SEPARATED, "", search.ENTER_TAGS, limits.tags_limit),
+        text_option(
+            "tags",
+            search.TAGS_COMMA_SEPARATED,
+            "",
+            search.ENTER_TAGS,
+            limits.tags_limit,
+        ),
         select_option(
             "sort_by",
             search.SORT_BY,
@@ -321,7 +356,7 @@ async def levels_info(context: Context, state: State, request: Request) -> Respo
                 )
             ],
             sections=sections,
-            banner=await context.resources.banner(),
+            banner=await context.banner.get(),
         )
     )
 
@@ -531,21 +566,24 @@ def level_actions(
             else:
                 statuses = ["PUBLIC", "PRIVATE", "UNLISTED"]
                 default = current
+            options: list[ServerOption] = [
+                select_option(
+                    "visibility",
+                    loc.search.VISIBILITY,
+                    default,
+                    [(status, titles[status]) for status in statuses],
+                    required=True,
+                )
+            ]
+            if "PUBLIC" in statuses and current != "PUBLIC" and details.files.preview is None:
+                options.append(toggle_option("force", loc.make_public_force, False))
             actions.append(
                 ServerForm(
                     type="visibility",
                     title=loc.search.VISIBILITY,
                     icon=VISIBILITY_ICONS[current],
                     requireConfirmation=True,
-                    options=[
-                        select_option(
-                            "visibility",
-                            loc.search.VISIBILITY,
-                            default,
-                            [(status, titles[status]) for status in statuses],
-                            required=True,
-                        )
-                    ],
+                    options=options,
                 )
             )
         if manages and current != "PUBLIC":
@@ -560,6 +598,20 @@ def level_actions(
                         toggle_option(
                             "confirm_finished",
                             loc.make_public_confirm_finished,
+                            False,
+                            description=loc.make_public_confirm_desc,
+                            required=True,
+                        ),
+                        toggle_option(
+                            "confirm_joke",
+                            loc.make_public_confirm_joke,
+                            False,
+                            description=loc.make_public_confirm_desc,
+                            required=True,
+                        ),
+                        toggle_option(
+                            "confirm_official",
+                            loc.make_public_confirm_official,
                             False,
                             description=loc.make_public_confirm_desc,
                             required=True,
@@ -669,7 +721,11 @@ async def level_details(item_name: str, context: Context, state: State) -> Respo
     promoted = promoted_name(item_name, prefix)
     if promoted is not None:
         details, _ = await asyncio.gather(
-            backend(context.backend.chart(state.session, promoted.chart_id), Site.DETAIL, loc),
+            backend(
+                context.backend.chart(state.session, promoted.chart_id),
+                Site.DETAIL,
+                loc,
+            ),
             _click(context, state.session, promoted.chart_id, promoted.view_code),
         )
     else:
@@ -724,6 +780,7 @@ async def _change_visibility(
     item_name: str,
     target: str | None,
     confirmed: bool,
+    force: bool,
 ) -> None:
     """Change a level's visibility, notifying the owner when staff hides it.
 
@@ -734,6 +791,7 @@ async def _change_visibility(
         item_name: Level name.
         target: New visibility.
         confirmed: Whether every make public confirmation was given.
+        force: Staff make it public without a preview.
     """
     loc = state.loc
     chart = require_chart_id(item_name, context.config.sonolus.chart_prefix, Site.VISIBILITY, loc)
@@ -747,7 +805,18 @@ async def _change_visibility(
     )
     if needs_confirmation and details.viewer.manages_visibility:
         raise SonolusError(400, loc.make_public_confirm_required)
-    await backend(context.backend.set_visibility(session, chart, target), Site.VISIBILITY, loc)
+    if (
+        target == "PUBLIC"
+        and details.status != "PUBLIC"
+        and details.files.preview is None
+        and not force
+    ):
+        raise SonolusError(409, loc.make_public_preview_required)
+    await backend(
+        context.backend.set_visibility(session, chart, target, force),
+        Site.VISIBILITY,
+        loc,
+    )
     viewer = details.viewer
     if target != "PUBLIC" and not viewer.manages_visibility and viewer.staff(NOTIFY_PERMISSION):
         await notify(
@@ -775,7 +844,11 @@ async def _delete(context: AppContext, loc: Loc, session: str, item_name: str) -
     await backend(context.backend.delete_chart(session, chart), Site.CHART_DELETE, loc)
     if not details.viewer.is_owner and details.viewer.staff(NOTIFY_PERMISSION):
         await notify(
-            context, session, details.owner.id, "Chart Deleted", f"#CHART_DELETED\n{details.title}"
+            context,
+            session,
+            details.owner.id,
+            "Chart Deleted",
+            f"#CHART_DELETED\n{details.title}",
         )
 
 
@@ -813,10 +886,19 @@ async def level_submit(
             return respond(ServerSubmitItemActionResponse(key="", hashes=[], shouldUpdateItem=True))
         case "visibility" | "make_public":
             confirmed = all(
-                (form.confirm_finished, form.confirm_jacket, form.confirm_title, form.confirm_bpm)
+                (
+                    form.confirm_finished,
+                    form.confirm_joke,
+                    form.confirm_official,
+                    form.confirm_jacket,
+                    form.confirm_title,
+                    form.confirm_bpm,
+                )
             )
             target = form.visibility if form.type == "visibility" else "PUBLIC"
-            await _change_visibility(context, state, session, item_name, target, confirmed)
+            await _change_visibility(
+                context, state, session, item_name, target, confirmed, form.force
+            )
             return respond(ServerSubmitItemActionResponse(key="", hashes=[], shouldUpdateItem=True))
         case "rerate":
             if not valid_constant(form.constant, context.constants):

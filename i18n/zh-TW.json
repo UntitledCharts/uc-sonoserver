@@ -82,7 +82,7 @@
     "TITLE_CONTAINS": "標題包含",
     "DESCRIPTION_CONTAINS": "描述包含",
     "ARTISTS_CONTAINS": "作曲家包含",
-    "AUTHOR_CONTAINS": "譜面作者姓名包含",
+    "CHARTER_CONTAINS": "譜面作者姓名包含",
     "ONLY_LEVELS_I_LIKED": "限我喜歡的關卡",
     "ONLY_LEVELS_I_COMMENTED_ON": "限我評論過的關卡",
     "MIN_LIKES": "最少讚數",

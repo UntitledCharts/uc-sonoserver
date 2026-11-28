@@ -151,7 +151,9 @@ async def community_submit(
         raise SonolusError(404, loc.not_found)
     chart = require_chart_id(item_name, context.config.sonolus.chart_prefix, Site.COMMENT_POST, loc)
     await backend(
-        context.backend.post_comment(state.session, chart, form.content), Site.COMMENT_POST, loc
+        context.backend.post_comment(state.session, chart, form.content),
+        Site.COMMENT_POST,
+        loc,
     )
     return respond(
         ServerSubmitItemCommunityActionResponse(key="", hashes=[], shouldUpdateComments=True)
@@ -193,7 +195,9 @@ async def comment_submit(
             BackendError(404, "error.comment.not_found"), Site.COMMENT_DELETE, loc
         )
     deleted = await backend(
-        context.backend.delete_comment(session, chart, comment_id), Site.COMMENT_DELETE, loc
+        context.backend.delete_comment(session, chart, comment_id),
+        Site.COMMENT_DELETE,
+        loc,
     )
     author = deleted.author
     if not deleted.is_own and author is not None and await can_notify(context, session):
