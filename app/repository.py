@@ -87,9 +87,12 @@ class Repository:
         Returns:
             str | None: The SHA-1, or None for a missing optional file.
         """
-        if not error_on_file_nonexistent and not (self._root / file.split("|")[0]).exists():
+        try:
+            data = await asyncio.to_thread(read_file_bytes, self._root, file)
+        except FileNotFoundError:
+            if error_on_file_nonexistent:
+                raise
             return None
-        data = await asyncio.to_thread(read_file_bytes, self._root, file)
         digest = sha1_hex(data)
         await self._redis.set(REPO_DATA_PREFIX + digest, data)
         await self._redis.set(REPO_PATH_PREFIX + file, digest)
