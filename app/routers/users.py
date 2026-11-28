@@ -1,3 +1,4 @@
+import aiohttp
 from fastapi import APIRouter, Response
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -69,7 +70,7 @@ async def user_details(user_id: str, context: Context, state: State) -> Response
     if state.session and not account.is_admin:
         try:
             me = await context.backend.me(state.session)
-        except BackendError:
+        except (BackendError, aiohttp.ClientError, TimeoutError):
             me = None
         if me is not None and me.account.is_admin and me.account.id != account.id:
             if account.banned:

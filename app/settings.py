@@ -221,7 +221,7 @@ class ModerationConstants(_Section):
     Attributes:
         comment_limit: Longest comment text.
         rerate_limit: Longest rating text in the rerate form.
-        rerate_bound: Ratings must be strictly between minus this and this.
+        rerate_bound: Ratings must be between minus this and this, inclusive.
         rerate_max_decimals: Most decimal places a new rating may have.
     """
 

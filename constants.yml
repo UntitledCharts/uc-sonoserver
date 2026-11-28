@@ -42,5 +42,5 @@ search:
 moderation:
   comment_limit: 1500  # characters per comment
   rerate_limit: 9  # characters in the rerate field, like -999.123
-  rerate_bound: 1000  # new ratings must be strictly between -1000 and 1000
+  rerate_bound: 999  # new ratings must be between -999 and 999, the backend's range
   rerate_max_decimals: 3  # decimal places allowed when rerating

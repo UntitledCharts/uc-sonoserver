@@ -764,13 +764,12 @@ def valid_constant(value: str | None, constants: Constants) -> bool:
         return False
     try:
         number = decimal.Decimal(value)
-        if not (-limits.rerate_bound < number < limits.rerate_bound):
+        if not (-limits.rerate_bound <= number <= limits.rerate_bound):
             return False
     except (decimal.InvalidOperation, ValueError):
         return False
-    if "." in value and len(value.split(".")[1].rstrip("0")) > limits.rerate_max_decimals:
-        return False
-    return True
+    exponent = number.normalize().as_tuple().exponent
+    return isinstance(exponent, int) and -exponent <= limits.rerate_max_decimals
 
 
 async def _change_visibility(
