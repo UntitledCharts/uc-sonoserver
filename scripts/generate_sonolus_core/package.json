@@ -1,0 +1,12 @@
+{
+    "name": "generate-sonolus-core",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "generate": "node generate.mjs"
+    },
+    "dependencies": {
+        "@sonolus/core": "7.16.0",
+        "typescript": "6.0.3"
+    }
+}

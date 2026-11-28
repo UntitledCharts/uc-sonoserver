@@ -1,0 +1,46 @@
+website_url: https://untitledcharts.com  # website players are sent to for uploading levels
+
+assets:
+  banner_cache_seconds: 300  # 5 minutes before the server banner is asked from the backend again
+
+requests:
+  max_body_size: 65536  # 64 KiB per request body; the replay upload has its own limits below
+
+replays:
+  upload_key_seconds: 180  # 3 minutes to upload a replay after submitting a result
+  max_data_size: 2097152  # 2 MiB, compressed replay data
+  max_config_size: 1024  # 1 KiB, compressed replay configuration
+  max_config_decompressed_size: 65536  # 64 KiB, replay configuration after gunzip
+  max_multipart_overhead: 16384  # 16 KiB of multipart framing allowed on top of both files
+
+lists:
+  items_per_page:  # items per page of the lists built from files/ and of the posts list
+    default: 10
+    engines: 10
+  resource_section_size: 5  # items in the skin/background/effect/particle/engine, playlist and announcement sections
+  level_section_size: 3  # levels in each Newest/Random/Popular home section
+  backend_page_size: 10  # charts in a full backend page; a full random page means there are more
+  replay_section_size: 3  # replays in each Random/Newest home section
+  replay_page_size: 10  # replays per replay list page
+  leaderboard_top_records: 3  # records in a level's leaderboard preview
+  leaderboard_page_size: 10  # records per leaderboard page
+  max_page: 1000000  # highest page number accepted by any list; higher pages get 404
+  backend_max_limit: 100  # most items the backend returns per offset/limit request
+
+search:
+  keywords_limit: 100  # characters
+  title_limit: 100
+  author_limit: 60
+  description_limit: 200
+  artists_limit: 100
+  tags_limit: 200
+  min_rating: -999  # rating slider range
+  max_rating: 999
+  max_count: 9999  # likes and comments slider maximum
+  max_playlist_name_length: 500  # longest encoded "uploaded" playlist name or filter body
+
+moderation:
+  comment_limit: 1500  # characters per comment
+  rerate_limit: 9  # characters in the rerate field, like -999.123
+  rerate_bound: 999  # new ratings must be between -999 and 999, the backend's range
+  rerate_max_decimals: 3  # decimal places allowed when rerating

@@ -1,0 +1,28 @@
+server:
+  host: 0.0.0.0  # interface uvicorn binds to
+  port: 39039
+  workers: 1  # uvicorn worker processes; each compiles its own copy of files/ (~100-150 MB of RAM each); Windows always runs 1
+  debug: false  # only exposes /docs, /redoc, /openapi.json and access logs, never skips any check
+  public_url: https://untitledcharts.com  # public base url of this Sonolus server, no trailing slash; the backend's sonolus.server_url must match it
+  allowed_hosts: [untitledcharts.com]  # Host headers accepted, debug included; other hosts get 400 Invalid host header
+  trusted_proxies: 2  # proxies in front of the app (Cloudflare + nginx); the client ip is that many X-Forwarded-For entries from the right
+
+sonolus:
+  version: 1.1.5  # sent as the Sonolus-Version header on every response
+  title: UntitledCharts  # server title shown in the Sonolus app
+  description: "discord.gg/UntitledCharts\nA custom chart server :)"  # used when the player's locale has no server_description
+  chart_prefix: UnCh-  # prefix of chart item names; must match the backend's sonolus.chart_prefix
+
+backend:
+  url: http://127.0.0.1:39000  # chart backend base url, no trailing slash
+  sonoserver_key: "change me"  # X-SonoServer-Key for replay uploads and promotions; must match the backend's keys.sonoserver_key
+  timeout_seconds: 10  # total time allowed for one backend request
+
+keys:
+  upload_key_secret: "change me"  # HMAC key signing replay upload keys; changing it invalidates keys issued in the last few minutes
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  db: 0
+  password: null  # null for no password
